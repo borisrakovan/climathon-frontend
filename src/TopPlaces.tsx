@@ -36,19 +36,21 @@ function TopPlaces() {
    var colorScale = chroma.scale(["#D8EA9D", "#8CC7D1", "#EA9F9D"])
 
    return (
-      <Flex direction="row" pt={16}>
-         <Text fontSize="lg" transform="rotate(90deg)">
+      <Flex direction="column" pt={16} alignItems="center">
+         <Text fontSize="lg" mb={"8px"}>
             Top 5
          </Text>
 
-         <Box>
+         <Box w="100%">
             {topPlaces.map((topPlace, index) => {
                const color = colorScale(index / 10).hex()
                console.log("color: ", color)
 
                return (
                   <Box mb={2} key={topPlace.rank} bg={color} borderRadius="2xl">
-                     <Text fontSize="lg">{topPlace.name}</Text>
+                     <Text pl="16px" fontSize="lg">
+                        {topPlace.name}
+                     </Text>
                   </Box>
                )
             })}
