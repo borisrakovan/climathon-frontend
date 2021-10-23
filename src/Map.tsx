@@ -1,31 +1,44 @@
+import { Box } from "@chakra-ui/layout"
 import geoViewport from "@mapbox/geo-viewport"
 import React, { useCallback, useEffect } from "react"
-import ReactMapGL, { SVGOverlay } from "react-map-gl"
+import ReactMapGL, { SVGOverlay, WebMercatorViewport } from "react-map-gl"
 import "./App.css"
 import Overlay from "./Overlay"
 import { useDebounce } from "./useDebounce"
 
 const Map = ({ viewport, setViewport, data, setData }: any) => {
    const debouncedViewport = useDebounce(viewport, 300)
+   //  console.log("debouncedViewport: ", debouncedViewport.zoom)
 
    useEffect(() => {
-      const { longitude, latitude, zoom, width, height } = debouncedViewport
-      const bounds = geoViewport.bounds({ lon: longitude, lat: latitude }, zoom, [
-         width,
-         height,
-      ])
-      // console.log("boundingBox: ", bounds)
+      // const { longitude, latitude, zoom, width, height } = debouncedViewport
+      const vp = new WebMercatorViewport(debouncedViewport)
+      // console.log("vp: ", vp.getBounds())
+      // console.log("zoom: ", zoom)
+      // console.log("debouncedViewport: ", debouncedViewport)
+      // const bounds = geoViewport.bounds({ lon: longitude, lat: latitude }, zoom, [
+      //    width,
+      //    height,
+      // ])
+      const bounds = vp.getBounds().flat()
+      console.log("bounds: ", bounds)
       async function fetchData() {
-         const response = await fetch("http://rholly.sk:5000/index", {
-            method: "POST",
-            body: JSON.stringify({
-               bounds: bounds,
-               size: [250, 250],
-            }),
-         })
-         const parsedResponse = await response.json()
+         if (bounds[0]) {
+            try {
+               const response = await fetch("http://10.137.4.31:5000/index", {
+                  method: "POST",
+                  body: JSON.stringify({
+                     bounds: bounds,
+                     size: [100, 100],
+                  }),
+               })
+               const parsedResponse = await response.json()
 
-         setData(parsedResponse.result.index)
+               setData(parsedResponse.result.index)
+            } catch (error) {
+               console.error(error)
+            }
+         }
       }
 
       fetchData()
@@ -44,36 +57,28 @@ const Map = ({ viewport, setViewport, data, setData }: any) => {
       [data]
    )
 
+   //  console.log("data: ", data)
    if (!data) {
       return <span>Loading</span>
    }
 
    return (
-      <div className="App">
-         <div style={{ height: "100vh" }}>
-            <ReactMapGL
-               {...viewport}
-               mapStyle="https://api.maptiler.com/maps/4359ec62-9a68-4fc3-b2f0-658688c538ec/style.json?key=w4vlPeqRikTQVaCu9Vf1"
-               width="100%"
-               height="100%"
-               onViewportChange={(viewport: any) => {
-                  // console.log("viewport: ", viewport)
-                  // lat1, long1, lat2, long2 = [16.818609722709333,
-                  // 48.037363987241775, 17.43639049342958, 48.26345862047203]
-                  // if()
+      <Box h="700px">
+         <ReactMapGL
+            {...viewport}
+            mapStyle="https://api.maptiler.com/maps/72ca1151-209c-4240-8fe3-9a9bac559209/style.json?key=w4vlPeqRikTQVaCu9Vf1"
+            width="100%"
+            height="100%"
+            onViewportChange={(viewport: any) => {
+               const isWithinLimits = viewport.zoom >= 11
+               if (isWithinLimits) {
                   setViewport(viewport)
-               }}
-               // getCursor={(state) => {
-               //    if (isDragging !== state.isDragging) {
-               //       setIsDragging(state.isDragging)
-               //    }
-               //    return ""
-               // }}
-            >
-               <SVGOverlay redraw={redraw} />
-            </ReactMapGL>
-         </div>
-      </div>
+               }
+            }}
+         >
+            <SVGOverlay redraw={redraw} />
+         </ReactMapGL>
+      </Box>
    )
 }
 
