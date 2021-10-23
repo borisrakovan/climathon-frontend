@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useMemo } from "react"
+import React from "react"
 import "./App.css"
-import ReactMapGL, { SVGOverlay } from "react-map-gl"
-import { useDebounce } from "./useDebounce"
-
-import Overlay from "./Overlay"
-import geoViewport from "@mapbox/geo-viewport"
+import Map from "./Map"
+import { Grid, GridItem } from "@chakra-ui/react"
+import ControlPanel from "./ControlPanel"
 
 type Data = number[][]
 
@@ -14,71 +12,31 @@ function App() {
       longitude: 17.1077,
       zoom: 11,
    })
-
-   const debouncedViewport = useDebounce(viewport, 300)
-
    const [data, setData] = React.useState<Data>([[]])
-   // const { latitude, longitude } = debouncedViewport
 
-   useEffect(() => {
-      const { longitude, latitude, zoom, width, height } = debouncedViewport
-      const bounds = geoViewport.bounds({ lon: longitude, lat: latitude }, zoom, [
-         width,
-         height,
-      ])
-      console.log("boundingBox: ", bounds)
-      async function fetchData() {
-         const response = await fetch("http://10.137.4.31:5000/index", {
-            method: "POST",
-            body: JSON.stringify({
-               bounds: bounds,
-            }),
-         })
-         const parsedResponse = await response.json()
-
-         setData(parsedResponse.result.index)
-      }
-
-      fetchData()
-   }, [debouncedViewport])
-
-   const redraw = useCallback(
-      ({ width, height }: any) => {
-         return (
-            <Overlay
-               viewportWidth={width}
-               viewportHeight={height}
-               indexMatrix={data}
-            />
-         )
-      },
-      [data]
-   )
-
-   // const debouncedRedraw = useMemo(() => debounce(redraw, 500), [redraw])
-
-   if (!data) {
-      return <span>Loading</span>
-   }
+   // const [isDragging, setIsDragging] = useState(false)
+   // console.log("isDragging: ", isDragging)
 
    return (
-      <div className="App">
-         <div style={{ height: "100vh" }}>
-            <ReactMapGL
-               {...viewport}
-               mapStyle="https://api.maptiler.com/maps/basic/style.json?key=w4vlPeqRikTQVaCu9Vf1"
-               width="100%"
-               height="100%"
-               onViewportChange={(viewport: any) => {
-                  console.log("viewport: ", viewport)
-                  setViewport(viewport)
-               }}
-            >
-               <SVGOverlay redraw={redraw} />
-            </ReactMapGL>
-         </div>
-      </div>
+      <Grid
+         h="200px"
+         templateRows="repeat(1, 1fr)"
+         templateColumns="repeat(4, 1fr)"
+         gap={4}
+      >
+         <GridItem rowSpan={1} colSpan={3}>
+            <Map
+               viewport={viewport}
+               setViewport={setViewport}
+               data={data}
+               setData={setData}
+            />
+         </GridItem>
+         <GridItem colSpan={1} bg="#E5F2CE">
+            <ControlPanel />
+         </GridItem>
+      </Grid>
    )
 }
-
+// Heat, pollution, precipitation, pollen,
 export default App
