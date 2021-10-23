@@ -2,16 +2,9 @@ import React, { useCallback, useEffect, useMemo } from "react"
 import "./App.css"
 import ReactMapGL, { SVGOverlay } from "react-map-gl"
 import { useDebounce } from "./useDebounce"
-import debounce from "lodash.debounce"
 
 import Overlay from "./Overlay"
-
-const data = [
-   [0.2, 0.2342, 0.5, 0.34],
-   [0.2, 0.2342, 0.5, 0.34],
-   [0.2, 0.2342, 0.5, 0.34],
-   [0.2, 0.2342, 0.5, 0.34],
-]
+import geoViewport from "@mapbox/geo-viewport"
 
 type Data = number[][]
 
@@ -22,24 +15,23 @@ function App() {
       zoom: 11,
    })
 
-   const debouncedViewport = useDebounce(viewport, 1000)
+   const debouncedViewport = useDebounce(viewport, 300)
 
    const [data, setData] = React.useState<Data>([[]])
-   const { latitude, longitude } = debouncedViewport
+   // const { latitude, longitude } = debouncedViewport
 
    useEffect(() => {
+      const { longitude, latitude, zoom, width, height } = debouncedViewport
+      const bounds = geoViewport.bounds({ lon: longitude, lat: latitude }, zoom, [
+         width,
+         height,
+      ])
+      console.log("boundingBox: ", bounds)
       async function fetchData() {
          const response = await fetch("http://10.137.4.31:5000/index", {
             method: "POST",
             body: JSON.stringify({
-               fromCoord: {
-                  lat: latitude,
-                  long: longitude,
-               },
-               toCoord: {
-                  lat: latitude,
-                  long: longitude,
-               },
+               bounds: bounds,
             }),
          })
          const parsedResponse = await response.json()
@@ -48,7 +40,7 @@ function App() {
       }
 
       fetchData()
-   }, [latitude, longitude])
+   }, [debouncedViewport])
 
    const redraw = useCallback(
       ({ width, height }: any) => {
@@ -77,7 +69,10 @@ function App() {
                mapStyle="https://api.maptiler.com/maps/basic/style.json?key=w4vlPeqRikTQVaCu9Vf1"
                width="100%"
                height="100%"
-               onViewportChange={(viewport: any) => setViewport(viewport)}
+               onViewportChange={(viewport: any) => {
+                  console.log("viewport: ", viewport)
+                  setViewport(viewport)
+               }}
             >
                <SVGOverlay redraw={redraw} />
             </ReactMapGL>
