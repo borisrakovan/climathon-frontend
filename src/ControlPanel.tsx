@@ -8,9 +8,8 @@ import {
 } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 
-function ControlPanel() {
+function ControlPanel({ factorValues, setFactorValues }: any) {
    const [factors, setFactors] = useState<{ id: string; name: string }[]>([])
-   const [factorValues, setFactorValues] = useState({})
    console.log("factorValues: ", factorValues)
 
    useEffect(() => {

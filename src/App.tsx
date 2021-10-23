@@ -15,6 +15,7 @@ function App() {
       zoom: 11,
    })
    const [data, setData] = React.useState<Data>([[]])
+   const [factorValues, setFactorValues] = React.useState({})
 
    return (
       // <Box p={4}>
@@ -45,20 +46,27 @@ function App() {
                   mt="32px"
                   w="100%"
                   h="50px"
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  bgGradient="linear(to-r, #D8EA9D, #8CC7D1, #EA9F9D)"
+                  borderRadius="3xl"
+                  // bgGradient="linear(to-r, #EA9F9D, #8CC7D1, #D8EA9D)"
+                  bgGradient="linear(to-r, #EA9F9D, #8CC7D1, #D8EA9D)"
                >
                   <Flex direction="row" justifyContent="space-between">
-                     <Text fontSize="3xl">1</Text>
-                     <Text fontSize="3xl">10</Text>
+                     <Text fontSize="3xl" pl="16px">
+                        0
+                     </Text>
+                     <Text fontSize="3xl" pr="16px">
+                        1
+                     </Text>
                   </Flex>
                </Box>
             </Box>
          </GridItem>
          <GridItem colSpan={1}>
             <Box pr={4}>
-               <ControlPanel />
+               <ControlPanel
+                  factorValues={factorValues}
+                  setFactorValues={setFactorValues}
+               />
             </Box>
          </GridItem>
       </Grid>

@@ -1,6 +1,5 @@
 import { Box } from "@chakra-ui/layout"
-import geoViewport from "@mapbox/geo-viewport"
-import React, { useCallback, useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import ReactMapGL, { SVGOverlay, WebMercatorViewport } from "react-map-gl"
 import "./App.css"
 import Overlay from "./Overlay"
@@ -8,20 +7,11 @@ import { useDebounce } from "./useDebounce"
 
 const Map = ({ viewport, setViewport, data, setData }: any) => {
    const debouncedViewport = useDebounce(viewport, 300)
-   //  console.log("debouncedViewport: ", debouncedViewport.zoom)
 
    useEffect(() => {
-      // const { longitude, latitude, zoom, width, height } = debouncedViewport
       const vp = new WebMercatorViewport(debouncedViewport)
-      // console.log("vp: ", vp.getBounds())
-      // console.log("zoom: ", zoom)
-      // console.log("debouncedViewport: ", debouncedViewport)
-      // const bounds = geoViewport.bounds({ lon: longitude, lat: latitude }, zoom, [
-      //    width,
-      //    height,
-      // ])
       const bounds = vp.getBounds().flat()
-      console.log("bounds: ", bounds)
+
       async function fetchData() {
          if (bounds[0]) {
             try {
@@ -29,7 +19,7 @@ const Map = ({ viewport, setViewport, data, setData }: any) => {
                   method: "POST",
                   body: JSON.stringify({
                      bounds: bounds,
-                     size: [100, 100],
+                     size: [200, 200],
                   }),
                })
                const parsedResponse = await response.json()
