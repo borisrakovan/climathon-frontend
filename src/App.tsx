@@ -1,10 +1,11 @@
-import React from "react"
+import { Box, Flex, Grid, GridItem, Text } from "@chakra-ui/react"
+import React, { useEffect } from "react"
+import { WebMercatorViewport } from "react-map-gl"
 import "./App.css"
-import Map from "./Map"
-import { Grid, GridItem, Text } from "@chakra-ui/react"
 import ControlPanel from "./ControlPanel"
+import Map from "./Map"
 import TopPlaces from "./TopPlaces"
-import { Box, Flex } from "@chakra-ui/react"
+import { useDebounce } from "./useDebounce"
 
 type Data = number[][]
 
@@ -15,8 +16,36 @@ function App() {
       zoom: 11,
    })
    const [data, setData] = React.useState<Data>([[]])
-   const [factorValues, setFactorValues] = React.useState({})
+   const [factorWeights, setFactorWeights] = React.useState({})
 
+   const debouncedViewport = useDebounce(viewport, 300)
+
+   useEffect(() => {
+      const vp = new WebMercatorViewport(debouncedViewport)
+      const bounds = vp.getBounds().flat()
+
+      async function fetchData() {
+         if (bounds[0]) {
+            try {
+               const response = await fetch("http://10.137.4.31:5000/index", {
+                  method: "POST",
+                  body: JSON.stringify({
+                     bounds: bounds,
+                     size: [200, 200],
+                     factorWeights,
+                  }),
+               })
+               const parsedResponse = await response.json()
+
+               setData(parsedResponse.result.index)
+            } catch (error) {
+               console.error(error)
+            }
+         }
+      }
+
+      fetchData()
+   }, [debouncedViewport, factorWeights, setData])
    return (
       // <Box p={4}>
       <Grid
@@ -36,12 +65,7 @@ function App() {
          </GridItem>
          <GridItem colSpan={4}>
             <Box pt="64px">
-               <Map
-                  viewport={viewport}
-                  setViewport={setViewport}
-                  data={data}
-                  setData={setData}
-               />
+               <Map viewport={viewport} setViewport={setViewport} data={data} />
                <Box
                   mt="32px"
                   w="100%"
@@ -64,8 +88,8 @@ function App() {
          <GridItem colSpan={1}>
             <Box pr={4}>
                <ControlPanel
-                  factorValues={factorValues}
-                  setFactorValues={setFactorValues}
+                  factorWeights={factorWeights}
+                  setFactorWeights={setFactorWeights}
                />
             </Box>
          </GridItem>

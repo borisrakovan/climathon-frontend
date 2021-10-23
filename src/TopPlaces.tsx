@@ -15,8 +15,8 @@ function TopPlaces() {
       { rank: 9, name: "asdertsda" },
       { rank: 10, name: "gb" },
    ])
-   // const [factorValues, setFactorValues] = useState({})
-   // console.log("factorValues: ", factorValues)
+   // const [factorWeights, setFactorWeights] = useState({})
+   // console.log("factorWeights: ", factorWeights)
 
    useEffect(() => {
       // async function fetchData() {

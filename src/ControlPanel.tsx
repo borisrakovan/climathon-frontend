@@ -8,9 +8,9 @@ import {
 } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 
-function ControlPanel({ factorValues, setFactorValues }: any) {
+function ControlPanel({ factorWeights, setFactorWeights }: any) {
    const [factors, setFactors] = useState<{ id: string; name: string }[]>([])
-   console.log("factorValues: ", factorValues)
+   console.log("factorWeights: ", factorWeights)
 
    useEffect(() => {
       async function fetchData() {
@@ -41,7 +41,7 @@ function ControlPanel({ factorValues, setFactorValues }: any) {
                      max={10}
                      step={1}
                      onChange={(value) =>
-                        setFactorValues((state) => ({
+                        setFactorWeights((state: any) => ({
                            ...state,
                            [factor.id]: value,
                         }))
