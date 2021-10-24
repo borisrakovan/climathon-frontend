@@ -33,7 +33,7 @@ function TopPlaces() {
       // fetchData()
    }, [])
 
-   var colorScale = chroma.scale(["#D8EA9D", "#8CC7D1", "#EA9F9D"])
+   var colorScale = chroma.scale(["#D8EA9D", "#EA9F9D"])
 
    return (
       <Flex direction="column" pt={16} alignItems="center">
@@ -44,7 +44,6 @@ function TopPlaces() {
          <Box w="100%">
             {topPlaces.map((topPlace, index) => {
                const color = colorScale(index / 10).hex()
-               console.log("color: ", color)
 
                return (
                   <Box mb={2} key={topPlace.rank} bg={color} borderRadius="2xl">

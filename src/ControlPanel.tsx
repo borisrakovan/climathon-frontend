@@ -8,8 +8,13 @@ import {
 } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 
+interface Factor {
+   id: string
+   name: string
+}
+
 function ControlPanel({ factorWeights, setFactorWeights }: any) {
-   const [factors, setFactors] = useState<{ id: string; name: string }[]>([])
+   const [factors, setFactors] = useState<Factor[]>([])
    console.log("factorWeights: ", factorWeights)
 
    useEffect(() => {
@@ -19,15 +24,19 @@ function ControlPanel({ factorWeights, setFactorWeights }: any) {
                method: "GET",
             })
             const parsedResponse = await response.json()
+            const factors = parsedResponse.result
+            setFactors(factors)
 
-            setFactors(parsedResponse.result)
+            const defaultFactorValues: { [key: string]: number } = {}
+            factors.forEach((factor: Factor) => (defaultFactorValues[factor.id] = 5))
+            setFactorWeights(defaultFactorValues)
          } catch (error) {
             console.error(error)
          }
       }
 
       fetchData()
-   }, [])
+   }, [setFactorWeights])
 
    return (
       <Box pt={64}>
@@ -35,6 +44,7 @@ function ControlPanel({ factorWeights, setFactorWeights }: any) {
             return (
                <Box mb={2} key={factor.id}>
                   <Text fontSize="lg">{factor.name}</Text>
+                  <Text fontSize="md">{setFactorWeights[factor.id]}</Text>
                   <Slider
                      defaultValue={5}
                      min={0}

@@ -19,6 +19,7 @@ function App() {
    const [factorWeights, setFactorWeights] = React.useState({})
 
    const debouncedViewport = useDebounce(viewport, 300)
+   const debouncedfactorWeights = useDebounce(factorWeights, 300)
 
    useEffect(() => {
       const vp = new WebMercatorViewport(debouncedViewport)
@@ -32,7 +33,7 @@ function App() {
                   body: JSON.stringify({
                      bounds: bounds,
                      size: [200, 200],
-                     factorWeights,
+                     factorWeights: debouncedfactorWeights,
                   }),
                })
                const parsedResponse = await response.json()
@@ -45,15 +46,13 @@ function App() {
       }
 
       fetchData()
-   }, [debouncedViewport, factorWeights, setData])
+   }, [debouncedViewport, debouncedfactorWeights, setData])
    return (
-      // <Box p={4}>
       <Grid
          h="100vh"
          templateRows="repeat(10, 1fr)"
          templateColumns="repeat(6, 1fr)"
          gap={6}
-         // py="32px"
       >
          <GridItem colSpan={1}>
             <Flex justifyContent="center">
@@ -71,7 +70,6 @@ function App() {
                   w="100%"
                   h="50px"
                   borderRadius="3xl"
-                  // bgGradient="linear(to-r, #EA9F9D, #8CC7D1, #D8EA9D)"
                   bgGradient="linear(to-r, #EA9F9D, #8CC7D1, #D8EA9D)"
                >
                   <Flex direction="row" justifyContent="space-between">
@@ -94,8 +92,6 @@ function App() {
             </Box>
          </GridItem>
       </Grid>
-      // </Box>
    )
 }
-// Heat, pollution, precipitation, pollen,
 export default App
