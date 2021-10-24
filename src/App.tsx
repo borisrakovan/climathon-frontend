@@ -61,7 +61,7 @@ function App() {
       >
          <GridItem colSpan={1}>
             <Flex justifyContent="center">
-               <img src="/logo.png" height="150px" width="150px" />
+               <img src="/logo.png" alt="Logo" height="150px" width="150px" />
             </Flex>
             <Box pl={4}>
                <TopPlaces />

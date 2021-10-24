@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import chroma from "chroma-js"
 
 function TopPlaces() {
-   const [topPlaces, setTopPlaces] = useState<{ rank: number; name: string }[]>([
+   const [topPlaces] = useState<{ rank: number; name: string }[]>([
       { rank: 1, name: "48.1467,17.5655" },
       { rank: 2, name: "47.8467,17.4565" },
       { rank: 3, name: "48.4235,17.45645" },
