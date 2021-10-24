@@ -1,5 +1,5 @@
 import { Box, Flex, Grid, GridItem, Text } from "@chakra-ui/react"
-import React, { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { WebMercatorViewport } from "react-map-gl"
 import "./App.css"
 import ControlPanel from "./ControlPanel"
@@ -10,13 +10,14 @@ import { useDebounce } from "./useDebounce"
 type Data = number[][]
 
 function App() {
-   const [viewport, setViewport] = React.useState({
+   const [viewport, setViewport] = useState({
       latitude: 48.1486,
       longitude: 17.1077,
       zoom: 11,
    })
-   const [data, setData] = React.useState<Data>([[]])
-   const [factorWeights, setFactorWeights] = React.useState({})
+   const [data, setData] = useState<Data>([[]])
+   const [factorWeights, setFactorWeights] = useState({})
+   const [isLoading, setIsLoading] = useState(false)
 
    const debouncedViewport = useDebounce(viewport, 300)
    const debouncedfactorWeights = useDebounce(factorWeights, 300)
@@ -28,6 +29,7 @@ function App() {
       async function fetchData() {
          if (bounds[0]) {
             try {
+               setIsLoading(true)
                const response = await fetch("http://10.137.4.31:5000/index", {
                   method: "POST",
                   body: JSON.stringify({
@@ -41,6 +43,8 @@ function App() {
                setData(parsedResponse.result.index)
             } catch (error) {
                console.error(error)
+            } finally {
+               setIsLoading(false)
             }
          }
       }
@@ -64,7 +68,12 @@ function App() {
          </GridItem>
          <GridItem colSpan={4}>
             <Box pt="64px">
-               <Map viewport={viewport} setViewport={setViewport} data={data} />
+               <Map
+                  viewport={viewport}
+                  setViewport={setViewport}
+                  data={data}
+                  isLoading={isLoading}
+               />
                <Box
                   mt="32px"
                   w="100%"

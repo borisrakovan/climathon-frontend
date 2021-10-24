@@ -3,10 +3,16 @@ import { useCallback } from "react"
 import ReactMapGL, { SVGOverlay } from "react-map-gl"
 import "./App.css"
 import Overlay from "./Overlay"
+import GridLoader from "react-spinners/GridLoader"
+import { css } from "@emotion/react"
 
-const Map = ({ viewport, setViewport, data }: any) => {
+const Map = ({ viewport, setViewport, data, isLoading }: any) => {
+   //  console.log("isLoading: ", isLoading)
    const redraw = useCallback(
       ({ width, height }: any) => {
+         //  if (true) {
+         //     return <GridLoader></GridLoader>
+         //  }
          return (
             <Overlay
                viewportWidth={width}
@@ -36,8 +42,23 @@ const Map = ({ viewport, setViewport, data }: any) => {
                }
             }}
          >
-            <SVGOverlay redraw={redraw} />
+            {isLoading ? <Spinner /> : <SVGOverlay redraw={redraw} />}
          </ReactMapGL>
+      </Box>
+   )
+}
+
+const Spinner = () => {
+   const loaderCss = css`
+      display: block;
+      padding-top: 350px;
+      margin-left: auto;
+      margin-right: auto;
+   `
+
+   return (
+      <Box position="relative" bg="gray" h="750px" opacity="0.8">
+         <GridLoader css={loaderCss} />
       </Box>
    )
 }

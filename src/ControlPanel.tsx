@@ -15,7 +15,6 @@ interface Factor {
 
 function ControlPanel({ factorWeights, setFactorWeights }: any) {
    const [factors, setFactors] = useState<Factor[]>([])
-   console.log("factorWeights: ", factorWeights)
 
    useEffect(() => {
       async function fetchData() {
@@ -44,7 +43,7 @@ function ControlPanel({ factorWeights, setFactorWeights }: any) {
             return (
                <Box mb={2} key={factor.id}>
                   <Text fontSize="lg">{factor.name}</Text>
-                  <Text fontSize="md">{setFactorWeights[factor.id]}</Text>
+                  <Text fontSize="md">{factorWeights[factor.id]}</Text>
                   <Slider
                      defaultValue={5}
                      min={0}
