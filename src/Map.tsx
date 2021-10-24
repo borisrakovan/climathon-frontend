@@ -1,18 +1,14 @@
 import { Box } from "@chakra-ui/layout"
 import { useCallback } from "react"
-import ReactMapGL, { SVGOverlay } from "react-map-gl"
+import ReactMapGL, { ScaleControl, SVGOverlay } from "react-map-gl"
 import "./App.css"
 import Overlay from "./Overlay"
 import GridLoader from "react-spinners/GridLoader"
 import { css } from "@emotion/react"
 
 const Map = ({ viewport, setViewport, data, isLoading }: any) => {
-   //  console.log("isLoading: ", isLoading)
    const redraw = useCallback(
       ({ width, height }: any) => {
-         //  if (true) {
-         //     return <GridLoader></GridLoader>
-         //  }
          return (
             <Overlay
                viewportWidth={width}
@@ -43,6 +39,14 @@ const Map = ({ viewport, setViewport, data, isLoading }: any) => {
             }}
          >
             {isLoading ? <Spinner /> : <SVGOverlay redraw={redraw} />}
+            <ScaleControl
+               maxWidth={100}
+               unit="metric"
+               style={{
+                  left: 20,
+                  bottom: 20,
+               }}
+            />
          </ReactMapGL>
       </Box>
    )
@@ -57,7 +61,13 @@ const Spinner = () => {
    `
 
    return (
-      <Box position="relative" bg="gray" h="750px" opacity="0.8">
+      <Box
+         position="relative"
+         bg="gray"
+         h="750px"
+         opacity="0.8"
+         bgGradient="linear(to-r, #EA9F9D, #8CC7D1, #D8EA9D)"
+      >
          <GridLoader css={loaderCss} />
       </Box>
    )

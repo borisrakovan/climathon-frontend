@@ -4,16 +4,12 @@ import chroma from "chroma-js"
 
 function TopPlaces() {
    const [topPlaces, setTopPlaces] = useState<{ rank: number; name: string }[]>([
-      { rank: 1, name: "asdsda" },
-      { rank: 2, name: "zxc" },
-      { rank: 3, name: "rer" },
-      { rank: 4, name: "sd" },
-      { rank: 5, name: "asdczxsda" },
-      { rank: 6, name: "asdsda" },
-      { rank: 7, name: "fsdf" },
-      { rank: 8, name: "54" },
-      { rank: 9, name: "asdertsda" },
-      { rank: 10, name: "gb" },
+      { rank: 1, name: "48.1467,17.5655" },
+      { rank: 2, name: "47.8467,17.4565" },
+      { rank: 3, name: "48.4235,17.45645" },
+      { rank: 4, name: "48.54443,17.12140" },
+      { rank: 5, name: "48.5545,17.345" },
+      { rank: 6, name: "48.14671,17.12104" },
    ])
    // const [factorWeights, setFactorWeights] = useState({})
    // console.log("factorWeights: ", factorWeights)
@@ -38,7 +34,7 @@ function TopPlaces() {
    return (
       <Flex direction="column" pt={16} alignItems="center">
          <Text fontSize="lg" mb={"8px"}>
-            Top 5
+            Top 3
          </Text>
 
          <Box w="100%">
@@ -54,7 +50,7 @@ function TopPlaces() {
                )
             })}
          </Box>
-         <Text fontSize="lg">Worst 5</Text>
+         <Text fontSize="lg">Worst 3</Text>
       </Flex>
    )
 }

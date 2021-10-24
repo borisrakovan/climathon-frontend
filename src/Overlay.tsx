@@ -15,18 +15,14 @@ const Overlay = ({ indexMatrix, viewportWidth, viewportHeight }: Props) => {
    const colWidth = viewportWidth / columns
    const rowHeight = viewportHeight / rows
 
-   // var colorScale = chroma.scale(["#EFBCB6", "#98C8D4", "#E5F2CE"])
-   // var colorScale = chroma.scale(["#EFBCB6", "#98C8D4", "#E5F2CE"])
-   // var colorScale = chroma.scale(["#EA9F9D", "#8CC7D1", "#D8EA9D"])
-   // const colorScale = chroma.scale(["#D8EA9D", "#EA9F9D"])
    var colorScale = chroma.scale(["#D8EA9D", "#8CC7D1", "#EA9F9D"])
-   // var colorScale = chroma.scale(["blue", "red"])
+   // var colorScale = chroma.scale(["green", "red"])
 
    return (
       <>
          {indexMatrix.map((rows, indexRow) => {
             return rows.map((index, indexCol) => {
-               let fill = colorScale(index).hex()
+               let fill = colorScale(1 - index).hex()
                return (
                   <rect
                      key={`${indexRow}-${indexCol}`}

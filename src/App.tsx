@@ -17,7 +17,7 @@ function App() {
    })
    const [data, setData] = useState<Data>([[]])
    const [factorWeights, setFactorWeights] = useState({})
-   const [isLoading, setIsLoading] = useState(false)
+   const [isLoading, setIsLoading] = useState(true)
 
    const debouncedViewport = useDebounce(viewport, 300)
    const debouncedfactorWeights = useDebounce(factorWeights, 300)
@@ -34,7 +34,7 @@ function App() {
                   method: "POST",
                   body: JSON.stringify({
                      bounds: bounds,
-                     size: [200, 200],
+                     size: [120, 120],
                      factorWeights: debouncedfactorWeights,
                   }),
                })
@@ -51,6 +51,7 @@ function App() {
 
       fetchData()
    }, [debouncedViewport, debouncedfactorWeights, setData])
+
    return (
       <Grid
          h="100vh"
